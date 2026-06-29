@@ -25,6 +25,10 @@ export const metadata: Metadata = {
       "Understand Any Codebase. Trace Execution. Ship with Confidence.",
     type: "website",
   },
+  icons: {
+    icon: "/codetrace-icon.svg",
+    apple: "/codetrace-icon.png",
+  },
 };
 
 export default function RootLayout({
