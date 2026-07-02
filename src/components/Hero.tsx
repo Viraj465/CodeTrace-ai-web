@@ -68,7 +68,7 @@ export default function Hero() {
         style={{ position: "relative", zIndex: 1 }}
       >
         <span className="hero-badge-sparkle">✨</span>
-        <span className="hero-badge-version">v0.1 available on PyPI</span>
+        <span className="hero-badge-version">v1.0 available on PyPI</span>
         <span className="hero-badge-pip">· pip install codetrace-ai</span>
         <span className="hero-badge-arrow">→</span>
       </a>
