@@ -9,7 +9,7 @@ const supabase = createClient(
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json();
+    const { email, terms_accepted } = await request.json();
 
     if (!email || typeof email !== 'string') {
       return NextResponse.json(
@@ -27,9 +27,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!terms_accepted) {
+      return NextResponse.json(
+        { error: 'You must accept the Terms & Conditions.' },
+        { status: 400 }
+      );
+    }
+
     const { data, error } = await supabase
       .from('waitlist')
-      .insert([{ email }])
+      .insert([{ email, terms_accepted }])
       .select();
 
     if (error) {

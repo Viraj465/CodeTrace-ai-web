@@ -1,22 +1,50 @@
 "use client";
 
 import React, { useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 export default function Pricing() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
 
-  const handleWaitlist = async (e: React.FormEvent) => {
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [termsContent, setTermsContent] = useState("");
+  const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [termsLoading, setTermsLoading] = useState(false);
+
+  const openTermsModal = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
 
+    setShowTermsModal(true);
+    setTermsLoading(true);
+    try {
+      const res = await fetch("/api/terms");
+      const data = await res.json();
+      if (res.ok) {
+        setTermsContent(data.content);
+      } else {
+        setTermsContent("Failed to load Terms & Conditions.");
+      }
+    } catch {
+      setTermsContent("Failed to load Terms & Conditions.");
+    } finally {
+      setTermsLoading(false);
+    }
+  };
+
+  const submitWaitlist = async () => {
+    if (!email || !termsAccepted) return;
+
     setStatus("loading");
+    setShowTermsModal(false);
     try {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, terms_accepted: termsAccepted }),
       });
       const data = await res.json();
 
@@ -31,6 +59,15 @@ export default function Pricing() {
     } catch {
       setStatus("error");
       setMessage("Network error. Please try again.");
+    }
+  };
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const bottom =
+      e.currentTarget.scrollHeight - e.currentTarget.scrollTop <=
+      e.currentTarget.clientHeight + 10;
+    if (bottom) {
+      setHasScrolledToBottom(true);
     }
   };
 
@@ -131,7 +168,7 @@ export default function Pricing() {
             {status === "success" ? (
               <div className="waitlist-success">{message}</div>
             ) : (
-              <form className="waitlist-form" onSubmit={handleWaitlist}>
+              <form className="waitlist-form" onSubmit={openTermsModal}>
                 <input
                   type="email"
                   className="waitlist-input"
@@ -157,6 +194,47 @@ export default function Pricing() {
           </div>
         </div>
       </div>
+
+      {showTermsModal && (
+        <div className="terms-modal-overlay">
+          <div className="terms-modal-content">
+            <h3>Terms and Conditions</h3>
+            <div className="terms-modal-body" onScroll={handleScroll}>
+              {termsLoading ? (
+                <p>Loading terms...</p>
+              ) : (
+                <ReactMarkdown>{termsContent}</ReactMarkdown>
+              )}
+            </div>
+            <div className="terms-modal-footer">
+              <label className={`terms-checkbox-label ${!hasScrolledToBottom ? 'disabled' : ''}`}>
+                <input
+                  type="checkbox"
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                  disabled={!hasScrolledToBottom}
+                />
+                I agree to the Terms & Conditions
+              </label>
+              <div className="terms-modal-actions">
+                <button
+                  className="terms-btn terms-btn-cancel"
+                  onClick={() => setShowTermsModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="terms-btn terms-btn-confirm"
+                  onClick={submitWaitlist}
+                  disabled={!termsAccepted}
+                >
+                  Confirm & Join
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
