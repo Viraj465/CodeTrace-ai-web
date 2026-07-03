@@ -4,9 +4,9 @@ import React, { useState, useEffect, useRef } from "react";
 import NetworkBackground from "./NetworkBackground";
 
 const typingLines = [
-  { text: "Understand Any Codebase.", isGradient: false },
-  { text: "Trace Execution.", isGradient: false },
-  { text: "Ship with Confidence.", isGradient: true },
+  { text: "Give your AI coding agent", isGradient: false },
+  { text: "X-ray vision into your codebase.", isGradient: false },
+  { text: "100% local. Zero cloud.", isGradient: true },
 ];
 
 export default function Hero() {
@@ -68,7 +68,7 @@ export default function Hero() {
         style={{ position: "relative", zIndex: 1 }}
       >
         <span className="hero-badge-sparkle">✨</span>
-        <span className="hero-badge-version">v1.0 available on PyPI</span>
+        <span className="hero-badge-version">v1.0.2 available on PyPI</span>
         <span className="hero-badge-pip">· pip install codetrace-ai</span>
         <span className="hero-badge-arrow">→</span>
       </a>
@@ -126,10 +126,7 @@ export default function Hero() {
           transition: "opacity 0.6s ease, transform 0.6s ease",
         }}
       >
-        CodeTrace-AI is an autonomous engineering intelligence platform that
-        understands entire repositories through structural analysis, semantic
-        search, dependency mapping, call graphs, and AI reasoning—so you grok
-        unfamiliar code in minutes, not days.
+        CodeTrace AI gives your AI coding agent a complete map of your codebase — blast radius, call graphs, architecture boundaries — served 100% locally, zero cloud.
       </p>
 
       {/* CTA Buttons */}
