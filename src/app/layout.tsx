@@ -1,29 +1,55 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import ScrollObserver from "@/components/ScrollObserver";
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "CodeTrace AI — Understand Any Codebase. Trace Execution. Ship with Confidence.",
+  metadataBase: new URL("https://codetraceai.in"),
+  title: "CodeTrace AI — The Governed Code Intelligence Layer for AI Agents",
   description:
-    "CodeTrace-AI is an autonomous engineering intelligence platform that understands entire repositories through structural analysis, semantic search, dependency mapping, call graphs, and AI reasoning.",
+    "Deterministic Call Graphs, Blast Radius Verification, and Evidence-Backed Reasoning for AI coding agents and developers. Local-first, works with any LLM, and fully air-gapped with Ollama.",
   keywords: [
-    "code analysis",
-    "codebase understanding",
-    "call graph",
-    "semantic search",
-    "AI code review",
-    "dependency mapping",
+    "CodeTrace AI",
+    "Governed Pipeline Protocol",
+    "Call Graph",
+    "Blast Radius Verification",
+    "Model Context Protocol",
+    "MCP Server",
+    "Tree-sitter AST",
+    "Semantic Code Search",
+    "Local Code Intelligence",
+    "AI Coding Agent",
+    "Ollama Local Coding",
   ],
+  authors: [{ name: "Viraaj Sawant" }],
   openGraph: {
-    title: "CodeTrace AI",
+    title: "CodeTrace AI — The Governed Code Intelligence Layer for AI Agents",
     description:
-      "Understand Any Codebase. Trace Execution. Ship with Confidence.",
+      "Deterministic Call Graphs, Blast Radius Verification, and Evidence-Backed Reasoning, 100% Local.",
     type: "website",
+    url: "https://codetraceai.in",
+    siteName: "CodeTrace AI",
+    images: [
+      {
+        url: "/codetrace-banner.png",
+        width: 1200,
+        height: 630,
+        alt: "CodeTrace AI Banner",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CodeTrace AI — Governed Code Intelligence Layer",
+    description:
+      "Deterministic Call Graphs, Blast Radius Verification, and Evidence-Backed Reasoning, 100% Local.",
+    creator: "@__viraj__1",
   },
   icons: {
     icon: "/codetrace-icon.svg",
@@ -37,8 +63,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className} suppressHydrationWarning>
+        <ScrollObserver />
+        {children}
+      </body>
     </html>
   );
 }

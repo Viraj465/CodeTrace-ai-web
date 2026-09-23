@@ -2,302 +2,146 @@
 
 import React from "react";
 
+const featuresList = [
+  {
+    title: "Autonomous Code Research",
+    tagline: "Exact Line Citations Across Files",
+    description:
+      "Ask complex engineering questions in natural language. The agent executes hybrid search, navigates AST symbols, and reads file ranges to formulate grounded answers with verified file:line citations.",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+    ),
+    codeSnippet: `# Query: "Where is UserToken issued and verified?"
+auth/jwt.py:42 issues JWT tokens via create_token()
+middleware/auth.py:18 verifies tokens via verify()
+tests/test_auth.py:64 validates cryptographic signatures
+Coverage: 3 references, 6 active callers [CONFIRMED]`,
+  },
+  {
+    title: "Runtime Blast Radius Analysis",
+    tagline: "Know What Breaks Before You Edit",
+    description:
+      "Maps exact caller/callee relationships across 21 languages using Tree-sitter ASTs. See every downstream function, route, database model, and test suite affected by a planned change.",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="12" r="10" />
+        <circle cx="12" cy="12" r="6" />
+        <circle cx="12" cy="12" r="2" />
+      </svg>
+    ),
+    codeSnippet: `● auth/jwt.py (Target Symbol: verify)
+  ├── 1-hop: middleware/auth.py:18 (Auth Guard)
+  ├── 1-hop: api/routes/users.py:42 (User Profile)
+  ├── 2-hop: api/routes/admin.py:91 (Admin Dashboard)
+  └── Test: tests/test_auth.py (14 test cases impacted)`,
+  },
+  {
+    title: "Interactive Architecture Map",
+    tagline: "codetrace visualize (Self-contained HTML)",
+    description:
+      "Generate an offline, interactive 3D/2D visual graph of your codebase architecture. Features collapsible directory trees, hover symbol inspectors, live filter search, and cross-folder call edges.",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <polygon points="12 2 2 7 12 12 22 7 12 2" />
+        <polyline points="2 17 12 22 22 17" />
+        <polyline points="2 12 12 17 22 12" />
+      </svg>
+    ),
+    codeSnippet: `$ codetrace visualize
+✓ Generated .codetrace/graph_visualization.html
+✓ 142 Nodes, 4,891 Edges rendered
+✓ Cross-folder dependency linkages mapped
+Opening in default browser...`,
+  },
+  {
+    title: "Human-in-the-Loop Safe Edits",
+    tagline: "Unified Diff Previews & Path Protection",
+    description:
+      "Code modifications are proposed as clean unified diffs with built-in path-traversal protection. Nothing is ever written to disk without explicit developer confirmation.",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+    ),
+    codeSnippet: `--- a/middleware/auth.py
++++ b/middleware/auth.py
+@@ -18,3 +18,4 @@
+-    token = request.headers.get("Authorization")
++    token = sanitize_bearer(request.headers.get("Authorization"))
++    claims = verify(token, config.SECRET_KEY)
+[Apply this diff to disk? (y/n/review)]:`,
+  },
+  {
+    title: "SHA-256 Smart Delta Sync",
+    tagline: "Sub-Second Incremental Re-Indexing",
+    description:
+      "Tracks file checksums to only re-parse files that actually changed. Subsequent runs complete in milliseconds even on million-line monolithic repositories.",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <polyline points="23 4 23 10 17 10" />
+        <polyline points="1 20 1 14 7 14" />
+        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+      </svg>
+    ),
+    codeSnippet: `$ codetrace index .
+[Delta Sync] 139 files unchanged (hash match)
+[Delta Sync] 3 files modified → re-indexed in 0.38s
+[Vector Sync] ChromaDB delta updated successfully`,
+  },
+  {
+    title: "Output Normalizer Layer",
+    tagline: "Provider-Agnostic Response Consistency",
+    description:
+      "Normalizes headings, list symbols, code-fence aliases (`py` → `python`), and spacing across all models — from local 7B Ollama to frontier cloud LLMs, ensuring a uniform CLI aesthetic.",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <line x1="3" y1="9" x2="21" y2="9" />
+        <line x1="9" y1="21" x2="9" y2="9" />
+      </svg>
+    ),
+    codeSnippet: `# output_normalizer.py in agent loop
+def normalize_response(raw_text: str) -> str:
+  # Normalizes code fences, heading levels,
+  # removes markdown artifacts, enforces uniform CLI styling
+  return normalized_rich_text`,
+  },
+];
+
 export default function Features() {
   return (
-    <section className="features" id="features">
+    <section className="features-section" id="features">
       <div className="container">
-        <div className="features-header">
-          <div className="section-label">Features</div>
-          <h2 className="section-heading">
-            Built for engineers who read
-            <br />
-            more code than they write.
+        <div className="text-center reveal-on-scroll">
+          <div className="section-label section-label-centered">Core Features</div>
+          <h2 className="section-heading section-heading-gradient">
+            Engineered for Deep Structural Code Understanding
           </h2>
-          <p className="section-subheading">
-            A precise toolkit for navigating unfamiliar repositories — from
-            first clone to confident shipping.
+          <p className="section-subheading mx-auto">
+            From first clone to confident shipping — everything you and your AI agent need to inspect, query, and refactor code safely.
           </p>
         </div>
 
-        <div className="features-grid">
-          {/* Card 1: Autonomous Code Research */}
-          <div className="feature-card">
-            <div className="feature-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 16v-4" />
-                <path d="M12 8h.01" />
-              </svg>
-            </div>
-            <h3 className="feature-title">Autonomous Code Research</h3>
-            <p className="feature-description">
-              Ask anything about a repo in natural language. The agent traverses
-              files, references, and semantic context to answer with citations
-              to exact lines.
-            </p>
-            <div className="feature-code">
-              <div className="feature-code-comment"># question</div>
-              <div>
-                <span className="feature-code-keyword">Where is </span>
-                <span className="feature-code-highlight">UserToken</span>
-                <span className="feature-code-keyword">
-                  {" "}
-                  created and validated?
-                </span>
+        <div className="features-grid-main">
+          {featuresList.map((f, i) => (
+            <div key={f.title} className={`feature-box reveal-on-scroll delay-${((i % 3) + 1) * 100}`}>
+              <div className="feature-box-glow" />
+              <div className="feature-box-icon">{f.icon}</div>
+              <h3 className="feature-box-title">{f.title}</h3>
+              <div style={{ fontSize: "12px", color: "var(--accent-cyan)", fontWeight: 600, marginBottom: "12px" }}>
+                {f.tagline}
               </div>
-              <div style={{ height: 12 }} />
-              <div className="feature-code-comment"># answer</div>
-              <div>
-                <span className="feature-code-highlight">auth/jwt.py:42</span>
-                <span className="feature-code-keyword"> issues tokens via </span>
-                <span className="feature-code-method">create_token()</span>
-                <span className="feature-code-keyword">, validated by </span>
-                <span className="feature-code-method">verify()</span>
-                <span className="feature-code-keyword"> in</span>
-              </div>
-              <div>
-                <span className="feature-code-highlight">
-                  middleware/auth.py:18
-                </span>
-                <span className="feature-code-keyword">.</span>
-              </div>
-              <div className="feature-code-tags">
-                <span className="feature-code-tag">3 references</span>
-                <span className="feature-code-tag">6 callers</span>
+              <p className="feature-box-desc">{f.description}</p>
+              <div className="feature-box-snippet">
+                <pre style={{ margin: 0, overflowX: "auto" }}>
+                  <code>{f.codeSnippet}</code>
+                </pre>
               </div>
             </div>
-          </div>
-
-          {/* Card 2: Structural Call Graph */}
-          <div className="feature-card">
-            <div className="feature-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="6" cy="6" r="3" />
-                <circle cx="18" cy="6" r="3" />
-                <circle cx="18" cy="18" r="3" />
-                <circle cx="6" cy="18" r="3" />
-                <line x1="8.5" y1="7.5" x2="15.5" y2="16.5" />
-                <line x1="15.5" y1="7.5" x2="8.5" y2="16.5" />
-              </svg>
-            </div>
-            <h3 className="feature-title">Structural Call Graph</h3>
-            <p className="feature-description">
-              Visualize every function call, dependency, and execution path.
-              Trace how a single change ripples across modules.
-            </p>
-            <div className="feature-graph">
-              <svg viewBox="0 0 400 180" fill="none">
-                {/* Edges */}
-                <line x1="200" y1="30" x2="100" y2="90" stroke="rgba(56,189,248,0.25)" strokeWidth="1.5" />
-                <line x1="200" y1="30" x2="300" y2="90" stroke="rgba(56,189,248,0.25)" strokeWidth="1.5" />
-                <line x1="100" y1="90" x2="60" y2="150" stroke="rgba(56,189,248,0.25)" strokeWidth="1.5" />
-                <line x1="100" y1="90" x2="160" y2="150" stroke="rgba(56,189,248,0.25)" strokeWidth="1.5" />
-                <line x1="300" y1="90" x2="260" y2="150" stroke="rgba(56,189,248,0.25)" strokeWidth="1.5" />
-                <line x1="300" y1="90" x2="340" y2="150" stroke="rgba(56,189,248,0.25)" strokeWidth="1.5" />
-                {/* Nodes */}
-                <circle cx="200" cy="30" r="8" fill="#0D1117" stroke="#38BDF8" strokeWidth="1.5" />
-                <circle cx="100" cy="90" r="7" fill="#0D1117" stroke="#38BDF8" strokeWidth="1.5" />
-                <circle cx="300" cy="90" r="7" fill="#0D1117" stroke="#38BDF8" strokeWidth="1.5" />
-                <circle cx="60" cy="150" r="6" fill="#0D1117" stroke="rgba(56,189,248,0.5)" strokeWidth="1.5" />
-                <circle cx="160" cy="150" r="6" fill="#0D1117" stroke="rgba(56,189,248,0.5)" strokeWidth="1.5" />
-                <circle cx="260" cy="150" r="6" fill="#0D1117" stroke="rgba(56,189,248,0.5)" strokeWidth="1.5" />
-                <circle cx="340" cy="150" r="6" fill="#0D1117" stroke="rgba(56,189,248,0.5)" strokeWidth="1.5" />
-                {/* Inner glow dots */}
-                <circle cx="200" cy="30" r="3" fill="#38BDF8" opacity="0.6" />
-                <circle cx="100" cy="90" r="2.5" fill="#38BDF8" opacity="0.5" />
-                <circle cx="300" cy="90" r="2.5" fill="#38BDF8" opacity="0.5" />
-              </svg>
-            </div>
-          </div>
-
-          {/* Card 3: Blast Radius Analysis */}
-          <div className="feature-card">
-            <div className="feature-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <circle cx="12" cy="12" r="6" />
-                <circle cx="12" cy="12" r="2" />
-              </svg>
-            </div>
-            <h3 className="feature-title">Blast Radius Analysis</h3>
-            <p className="feature-description">
-              Before you edit production code, see exactly which files, tests,
-              and consumers will be impacted. Ship without surprises.
-            </p>
-            <div className="feature-impact-list">
-              <div className="feature-impact-item">
-                <span className="feature-impact-icon" style={{ color: "#F85149" }}>●</span>
-                <span className="feature-impact-file">auth/jwt.py</span>
-                <span className="feature-impact-label">direct change</span>
-              </div>
-              <div className="feature-impact-item">
-                <span className="feature-impact-icon" style={{ color: "#FEBC2E" }}>●</span>
-                <span className="feature-impact-file">middleware/auth.py</span>
-                <span className="feature-impact-label">1-hop dependent</span>
-              </div>
-              <div className="feature-impact-item">
-                <span className="feature-impact-icon" style={{ color: "#FEBC2E" }}>●</span>
-                <span className="feature-impact-file">api/routes/users.py</span>
-                <span className="feature-impact-label">1-hop dependent</span>
-              </div>
-              <div className="feature-impact-item">
-                <span className="feature-impact-icon" style={{ color: "var(--accent-cyan)" }}>●</span>
-                <span className="feature-impact-file">tests/test_auth.py</span>
-                <span className="feature-impact-label">test coverage</span>
-              </div>
-              <div className="feature-impact-item">
-                <span className="feature-impact-icon" style={{ color: "var(--text-tertiary)" }}>●</span>
-                <span className="feature-impact-file">api/routes/admin.py</span>
-                <span className="feature-impact-label">2-hop dependent</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 4: Semantic Repository Search */}
-          <div className="feature-card">
-            <div className="feature-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-            </div>
-            <h3 className="feature-title">Semantic Repository Search</h3>
-            <p className="feature-description">
-              Find relevant code by meaning, not keywords. Embedding-powered
-              retrieval understands intent across files and languages.
-            </p>
-            <div className="feature-search-input">
-              <span className="feature-search-input-icon">🔍</span>
-              <span className="feature-search-input-text">
-                &quot;how is rate limiting implemented?&quot;
-              </span>
-            </div>
-            <div className="feature-search-result">
-              <div className="feature-search-result-file">
-                middleware/rate_limiter.py
-              </div>
-              <div className="feature-search-result-desc">
-                Token bucket implementation with Redis backend
-              </div>
-              <div className="feature-search-result-score">
-                similarity: 0.94
-              </div>
-            </div>
-            <div className="feature-search-result">
-              <div className="feature-search-result-file">
-                config/limits.yaml
-              </div>
-              <div className="feature-search-result-desc">
-                Rate limit thresholds per endpoint tier
-              </div>
-              <div className="feature-search-result-score">
-                similarity: 0.87
-              </div>
-            </div>
-          </div>
-
-          {/* Card 5: Safe AI Code Changes */}
-          <div className="feature-card">
-            <div className="feature-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
-            </div>
-            <h3 className="feature-title">Safe AI Code Changes</h3>
-            <p className="feature-description">
-              AI-generated patches that respect your architecture. Every
-              suggestion is grounded in call graph analysis and blast radius
-              checks.
-            </p>
-            <div className="feature-diff">
-              <div className="feature-diff-file">
-                middleware/rate_limiter.py
-              </div>
-              <div className="feature-diff-context">
-                {" "}
-                def check_rate_limit(self, key):
-              </div>
-              <div className="feature-diff-remove">
-                - &nbsp;&nbsp;&nbsp;&nbsp;count = self.redis.incr(key)
-              </div>
-              <div className="feature-diff-add">
-                + &nbsp;&nbsp;&nbsp;&nbsp;count = self.redis.incr(key)
-              </div>
-              <div className="feature-diff-add">
-                + &nbsp;&nbsp;&nbsp;&nbsp;if count == 1:
-              </div>
-              <div className="feature-diff-add">
-                + &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.redis.expire(key,
-                self.window)
-              </div>
-              <div className="feature-diff-context">
-                {" "}
-                &nbsp;&nbsp;&nbsp;&nbsp;return count &lt;= self.limit
-              </div>
-            </div>
-          </div>
-
-          {/* Card 6: Incremental Repository Sync */}
-          <div className="feature-card">
-            <div className="feature-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="23 4 23 10 17 10" />
-                <polyline points="1 20 1 14 7 14" />
-                <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
-              </svg>
-            </div>
-            <h3 className="feature-title">Incremental Repository Sync</h3>
-            <p className="feature-description">
-              Only re-index what changed. Git-aware diff tracking ensures your
-              knowledge graph stays current without full rebuilds.
-            </p>
-            <div className="feature-sync-stats">
-              <div className="feature-sync-stat">
-                <div className="feature-sync-stat-value">3</div>
-                <div className="feature-sync-stat-label">Files Changed</div>
-              </div>
-              <div className="feature-sync-stat">
-                <div className="feature-sync-stat-value">0.4s</div>
-                <div className="feature-sync-stat-label">Sync Time</div>
-              </div>
-              <div className="feature-sync-stat">
-                <div className="feature-sync-stat-value">142</div>
-                <div className="feature-sync-stat-label">Total Files</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Multi-Language Support */}
-        <div className="multi-lang">
-          <h3 className="multi-lang-title">Multi-Language Support</h3>
-          <p className="multi-lang-desc">
-            CodeTrace AI uses Tree-sitter grammars to parse any language. Works
-            out of the box with these — and growing.
-          </p>
-          <div className="multi-lang-pills">
-            {[
-              "Python",
-              "TypeScript",
-              "JavaScript",
-              "Rust",
-              "Go",
-              "Java",
-              "C++",
-              "C#",
-              "Ruby",
-              "PHP",
-              "Swift",
-              "Kotlin",
-              "HTML & CSS",
-              "Json",
-              "Bash"
-            ].map((lang) => (
-              <span key={lang} className="multi-lang-pill">
-                {lang}
-              </span>
-            ))}
-          </div>
+          ))}
         </div>
       </div>
     </section>

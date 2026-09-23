@@ -29,18 +29,18 @@ export default function NetworkBackground() {
     canvas.width = width;
     canvas.height = height;
 
-    const nodeCount = 18;
-    const connectionDistance = 250;
+    const nodeCount = 22;
+    const connectionDistance = 280;
     const nodes: Node[] = [];
 
     for (let i = 0; i < nodeCount; i++) {
       nodes.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
         radius: 3 + Math.random() * 3,
-        opacity: 0.15 + Math.random() * 0.25,
+        opacity: 0.18 + Math.random() * 0.28,
         pulseSpeed: 0.5 + Math.random() * 1.5,
         pulseOffset: Math.random() * Math.PI * 2,
       });
@@ -68,26 +68,35 @@ export default function NetworkBackground() {
           const dy = other.y - node.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < connectionDistance) {
-            const lineOpacity = (1 - dist / connectionDistance) * 0.08;
+            const lineOpacity = (1 - dist / connectionDistance) * 0.1;
             ctx.beginPath();
             ctx.moveTo(node.x, node.y);
             ctx.lineTo(other.x, other.y);
-            ctx.strokeStyle = `rgba(56, 189, 248, ${lineOpacity})`;
-            ctx.lineWidth = 0.8;
+            // Alternate between cyan and purple for connections
+            const usePurple = (Math.floor(node.x) + Math.floor(other.x)) % 3 === 0;
+            ctx.strokeStyle = usePurple
+              ? `rgba(139, 92, 246, ${lineOpacity})`
+              : `rgba(56, 189, 248, ${lineOpacity})`;
+            ctx.lineWidth = 0.9;
             ctx.stroke();
           }
         }
 
         // Outer glow
         ctx.beginPath();
-        ctx.arc(node.x, node.y, node.radius * 3, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(56, 189, 248, ${currentOpacity * 0.12})`;
+        ctx.arc(node.x, node.y, node.radius * 3.5, 0, Math.PI * 2);
+        const usePurpleGlow = Math.floor(node.x) % 2 === 0;
+        ctx.fillStyle = usePurpleGlow
+          ? `rgba(139, 92, 246, ${currentOpacity * 0.14})`
+          : `rgba(56, 189, 248, ${currentOpacity * 0.14})`;
         ctx.fill();
 
         // Inner dot
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(56, 189, 248, ${currentOpacity})`;
+        ctx.fillStyle = usePurpleGlow
+          ? `rgba(167, 139, 250, ${currentOpacity})`
+          : `rgba(56, 189, 248, ${currentOpacity})`;
         ctx.fill();
       }
 
